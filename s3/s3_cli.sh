@@ -25,14 +25,14 @@ function sls() {
 
     local s3Uri=$1
 
-    if (($# > 1)); then
+    if (($# > 1)) && [[ $2 != "-r" ]]; then
         echo "Usage: sls [s3Uri]"
 
         if ((debug == 1)); then eval "${close_debug}"; fi
         return 1
     fi
 
-    if (($# == 1)) && _is_relative_path "${s3Uri}"; then
+    if _is_relative_path "${s3Uri}"; then
         s3Uri="${s3_pwd%'/'}/${s3Uri}"
     else
         s3Uri=${s3_pwd}
@@ -42,7 +42,11 @@ function sls() {
         s3Uri="${s3Uri}/"
     fi
 
-    aws s3 ls "${s3Uri}"
+    if [[ "$2" == "-r" ]]; then
+        aws s3 ls ${s3Uri} --recursive
+    else
+        aws s3 ls ${s3Uri}
+    fi
 
     if ((debug == 1)); then eval "${close_debug}"; fi
 }
@@ -110,9 +114,9 @@ function sup() {
     fi
 
     if [[ $2 == "-r" || $3 == "-r" ]]; then
-        aws s3 cp "${localPath} ${s3Uri} --recursive"
+        aws s3 cp "${localPath}" "${s3Uri}" --recursive
     else
-        aws s3 cp "${localPath} ${s3Uri}"
+        aws s3 cp "${localPath}" "${s3Uri}"
     fi
 
     if ((debug == 1)); then eval "${close_debug}"; fi
@@ -133,10 +137,40 @@ function sdown() {
     fi
 
     if [[ $2 == "-r" || $3 == "-r" ]]; then
-        aws s3 cp "${s3Uri} ${localPath} --recursive"
+        aws s3 cp "${s3Uri}" "${localPath}" --recursive
     else
-        aws s3 cp "${s3Uri} ${localPath}"
+        aws s3 cp "${s3Uri}" "${localPath}"
     fi
+    if ((debug == 1)); then eval "${close_debug}"; fi
+}
+
+function smv() {
+    if ((debug == 1)); then eval "${open_debug}"; fi
+
+    if (($# < 2)); then
+        echo "Usage: scpy <s3Uri> <s3Uri>"
+
+        if ((debug == 1)); then eval "${close_debug}"; fi
+        return 1
+    fi
+
+    s3SrcUri=$1
+    s3DstUri=$2
+
+    if _is_relative_path "${s3SrcUri}"; then
+        s3SrcUri="${s3_pwd%'/'}/${s3SrcUri}"
+    fi
+
+    if _is_relative_path "${s3DstUri}"; then
+        s3DstUri="${s3_pwd%'/'}/${s3DstUri}"
+    fi
+
+    if [[ "$3" == "-r" ]]; then
+        aws s3 mv "${s3SrcUri}" "${s3DstUri}" --recursive
+    else
+        aws s3 mv "${s3SrcUri}" "${s3DstUri}"
+    fi
+
     if ((debug == 1)); then eval "${close_debug}"; fi
 }
 
@@ -151,12 +185,17 @@ function srm() {
 
     local s3Uri=$1
 
-    if _is_relative_path "${s3Uri}"; then
+    if [[ "${s3Uri}" == "-i" ]]; then
+        s3Uri="${s3_pwd%'/'}/"
+    elif _is_relative_path "${s3Uri}"; then
         s3Uri="${s3_pwd%'/'}/${s3Uri}"
     fi
 
-    if [[ $2 == "-r" ]]; then
-        aws s3 rm "${s3Uri} --recursive"
+    if [[ "$1" == "-i" ]]; then
+        aws s3 rm "${s3Uri}" --include $2
+
+    elif [[ $2 == "-r" ]]; then
+        aws s3 rm "${s3Uri}" --recursive
     else
         aws s3 rm "${s3Uri}"
     fi
