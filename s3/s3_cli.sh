@@ -23,6 +23,7 @@ function sdebug() {
 
 function sls() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
+    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     local pos_args=()
     typeset -A opt_args
@@ -36,7 +37,6 @@ function sls() {
 
         elif [[ "${arg}" =~ ^-.* ]]; then
             echo "Unknown option: ${arg}"
-            if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
             return 1
         else
             pos_args+=("${arg}")
@@ -45,13 +45,11 @@ function sls() {
 
     if [[ ${opt_args["-h"]} == "--help" ]]; then
         echo "Usage: sls [s3Uri] [-r]"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
     if ((${#pos_args} > 1)); then
         echo "Expect 0 or 1 positional argument, got ${#pos_args}"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -75,11 +73,10 @@ function sls() {
 
 function scd() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
+    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     if (($# > 1)); then
         echo "Usage: scd [s3Uri]"
-
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -114,6 +111,7 @@ function scd() {
 
 function sup() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
+    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     local pos_args=()
     typeset -A opt_args
@@ -126,7 +124,6 @@ function sup() {
 
         elif [[ "${arg}" == "-h" ]]; then
             echo "Usage: sup <LocalPath> <S3Uri> [-r] [-i partten]"
-            if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -141,7 +138,6 @@ function sup() {
 
     if ((${#pos_args} > 2)); then
         echo "Expect 1 or 2 positional argument, got ${#pos_args}"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -163,7 +159,6 @@ function sup() {
 
     if [[ ${s3Uri} == "s3://" ]]; then
         echo "missing bucket name"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -182,6 +177,7 @@ function sup() {
 
 function sdown() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
+    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     local pos_args=()
     typeset -A opt_args
@@ -194,7 +190,6 @@ function sdown() {
 
         elif [[ "${arg}" == "-h" ]]; then
             echo "Usage: sdown <s3Uri> <LocalPath> [-r] [-i partten]"
-            if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -209,7 +204,6 @@ function sdown() {
 
     if ((${#pos_args} > 2)); then
         echo "Expect 1 or 2 positional argument, got ${#pos_args}"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -241,6 +235,7 @@ function sdown() {
 
 function smv() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
+    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     local pos_args=()
     typeset -A opt_args
@@ -253,7 +248,6 @@ function smv() {
 
         elif [[ "${arg}" == "-h" ]]; then
             echo "Usage: smv <s3Uri> <s3Uri> [-r] [-i partten]"
-            if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -268,7 +262,6 @@ function smv() {
 
     if ((${#pos_args} > 2)); then
         echo "Expect 1 or 2 positional argument, got ${#pos_args}"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -290,7 +283,6 @@ function smv() {
 
     if [[ "${s3SrcUri}" == "${s3DstUri}" ]]; then
         echo "The source is same as destination"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
@@ -309,6 +301,7 @@ function smv() {
 
 function srm() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
+    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     local pos_args=()
     typeset -A opt_args
@@ -321,7 +314,6 @@ function srm() {
 
         elif [[ "${arg}" == "-h" ]]; then
             echo "Usage: srm [s3Uri] [-r] [-i partten]"
-            if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -336,7 +328,6 @@ function srm() {
 
     if ((${#pos_args} > 1)); then
         echo "Expect 0 or 1 positional argument, got ${#pos_args}"
-        if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
         return 1
     fi
 
