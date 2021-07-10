@@ -9,6 +9,8 @@ function spwd() {
     echo "${s3_pwd}"
 }
 
+# TODO:
+
 function sdebug() {
     if ((s3_debug == 1)); then
         s3_debug=0
@@ -91,7 +93,7 @@ function scd() {
         s3Uri="${s3_pwd%'/'}/${s3Uri%'/'}/"
     fi
 
-    if eval "aws s3 ls ${s3Uri} >> /dev/null 2&>1"; then
+    if eval "aws s3 ls ${s3Uri} >> /dev/null 2>&1"; then
         s3_old_pwd=${s3_pwd}
         s3_pwd=${s3Uri}
     else
