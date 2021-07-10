@@ -1,7 +1,6 @@
 # variables declaration
 declare s3_debug=0
 
-OLDPS1=""
 s3_pwd="s3://"
 s3_old_pwd="s3://"
 s3_open_debug="set -vx"
@@ -40,7 +39,7 @@ function sls() {
             if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
             return 1
         else
-            pos_args+=(${arg})
+            pos_args+=("${arg}")
         fi
     done
 
@@ -136,7 +135,7 @@ function sup() {
         elif [[ "${arg}" == "-i" ]]; then
             opt=1
         else
-            pos_args+=(${arg})
+            pos_args+=("${arg}")
         fi
     done
 
@@ -204,7 +203,7 @@ function sdown() {
         elif [[ "${arg}" == "-i" ]]; then
             opt=1
         else
-            pos_args+=(${arg})
+            pos_args+=("${arg}")
         fi
     done
 
@@ -263,7 +262,7 @@ function smv() {
         elif [[ "${arg}" == "-i" ]]; then
             opt=1
         else
-            pos_args+=(${arg})
+            pos_args+=("${arg}")
         fi
     done
 
@@ -331,7 +330,7 @@ function srm() {
         elif [[ "${arg}" == "-i" ]]; then
             opt=1
         else
-            pos_args+=(${arg})
+            pos_args+=("${arg}")
         fi
     done
 
