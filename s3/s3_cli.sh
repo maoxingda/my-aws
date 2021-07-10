@@ -25,35 +25,31 @@ function sls() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
     trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
-    local pos_args=()
-    typeset -A opt_args
+    local opt
+    local recursive=0
 
-    for arg; do
-        if [[ "${arg}" == "-r" ]]; then
-            opt_args["-r"]="--recursive"
-
-        elif [[ "${arg}" == "-h" ]]; then
-            opt_args["-h"]="--help"
-
-        elif [[ "${arg}" =~ ^-.* ]]; then
-            echo "Unknown option: ${arg}"
+    while getopts hr opt; do
+        case ${opt} in
+        h)
+            echo "Usage: $0 [-r] [s3Uri]"
+            return 0
+            ;;
+        r)
+            recursive=1
+            ;;
+        \?)
             return 1
-        else
-            pos_args+=("${arg}")
-        fi
+            ;;
+        esac
     done
+    ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if [[ ${opt_args["-h"]} == "--help" ]]; then
-        echo "Usage: $0 [s3Uri] [-r]"
+    if (($# > 1)); then
+        echo "Expect 0 or 1 positional argument, got $#"
         return 1
     fi
 
-    if ((${#pos_args} > 1)); then
-        echo "Expect 0 or 1 positional argument, got ${#pos_args}"
-        return 1
-    fi
-
-    local s3Uri="${pos_args[1]}"
+    local s3Uri=$1
 
     if [[ "${s3Uri}" == "" || "${s3Uri}" == "." ]]; then
         s3Uri="${s3_pwd%'/'}/"
@@ -62,7 +58,7 @@ function sls() {
         s3Uri="${s3_pwd%'/'}/${s3Uri%'/'}/"
     fi
 
-    if [[ ${opt_args["-r"]} == "--recursive" ]]; then
+    if ((recursive)); then
         aws s3 ls ${s3Uri} --human-readable --recursive
     else
         aws s3 ls ${s3Uri} --human-readable
@@ -113,39 +109,40 @@ function sup() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
     trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
-    local pos_args=()
-    typeset -A opt_args
+    local opt
+    local recursive=0
+    local include=""
 
-    local opt=0
-    for arg; do
-        if ((opt == 1)); then
-            opt_args["-i"]=${arg}
-            opt=0
-
-        elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: $0 <LocalPath> <S3Uri> [-r] [-i partten]"
+    while getopts hri: opt; do
+        case ${opt} in
+        h)
+            echo "Usage: $0 [-h] [-r] [-i wldcard] [localPath] [s3Uri]"
+            return 0
+            ;;
+        r)
+            recursive=1
+            ;;
+        i)
+            include="${{OPTARG}}"
+            ;;
+        \?)
             return 1
-
-        elif [[ "${arg}" == "-r" ]]; then
-            opt_args["-r"]="--recursive"
-
-        elif [[ "${arg}" == "-i" ]]; then
-            opt=1
-        else
-            pos_args+=("${arg}")
-        fi
+            ;;
+        esac
     done
+    ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if ((${#pos_args} > 2)); then
-        echo "Expect 1 or 2 positional argument, got ${#pos_args}"
+    if (($# > 2)); then
+        echo "Expect 1 or 2 positional argument, got $#"
         return 1
     fi
 
-    local localPath="${pos_args[1]}"
-    local s3Uri="${pos_args[2]}"
+    local localPath=$1
+    local s3Uri=$2
 
     if [[ "${localPath}" == "." ]]; then
         localPath="${PWD}/"
+
     elif _is_relative_path "${localPath}"; then
         localPath="${PWD}/${localPath}"
     fi
@@ -162,9 +159,9 @@ function sup() {
         return 1
     fi
 
-    if [[ ${opt_args["-r"]} == "--recursive" ]]; then
-        if [[ ${opt_args["-i"]} =~ .+ ]]; then
-            aws s3 cp "${localPath}" "${s3Uri}" --recursive --exclude "*" --include "${opt_args["-i"]}"
+    if ((recursive)); then
+        if [[ ${include} =~ .+ ]]; then
+            aws s3 cp "${localPath}" "${s3Uri}" --recursive --exclude "*" --include "${include}"
         else
             aws s3 cp "${localPath}" "${s3Uri}" --recursive
         fi
@@ -178,40 +175,41 @@ function sup() {
 function sdown() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
     trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    
+    local opt
+    local recursive=0
+    local include=""
 
-    local pos_args=()
-    typeset -A opt_args
-
-    local opt=0
-    for arg; do
-        if ((opt == 1)); then
-            opt_args["-i"]=${arg}
-            opt=0
-
-        elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: $0 <s3Uri> <LocalPath> [-r] [-i partten]"
+    while getopts hri: opt; do
+        case ${opt} in
+        h)
+            echo "Usage: $0 [-h] [-r] [-i wldcard] [s3Uri] [localPath]"
+            return 0
+            ;;
+        r)
+            recursive=1
+            ;;
+        i)
+            include="${OPTARG}"
+            ;;
+        \?)
             return 1
-
-        elif [[ "${arg}" == "-r" ]]; then
-            opt_args["-r"]="--recursive"
-
-        elif [[ "${arg}" == "-i" ]]; then
-            opt=1
-        else
-            pos_args+=("${arg}")
-        fi
+            ;;
+        esac
     done
+    ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if ((${#pos_args} > 2)); then
-        echo "Expect 1 or 2 positional argument, got ${#pos_args}"
+    if (($# > 2)); then
+        echo "Expect 1 or 2 positional argument, got $#"
         return 1
     fi
 
-    local s3Uri="${pos_args[1]}"
-    local localPath="${pos_args[2]}"
+    local s3Uri=$1
+    local localPath=$2
 
     if [[ "${s3Uri}" == "." ]]; then
         s3Uri="${s3_pwd%'/'}/"
+        
     elif _is_relative_path "${s3Uri}"; then
         s3Uri="${s3_pwd%'/'}/${s3Uri}"
     fi
@@ -220,9 +218,9 @@ function sdown() {
         localPath="${PWD}/"
     fi
 
-    if [[ ${opt_args["-r"]} == "--recursive" ]]; then
-        if [[ ${opt_args["-i"]} =~ .+ ]]; then
-            aws s3 cp "${s3Uri}" "${localPath}" --recursive --exclude "*" --include "${opt_args["-i"]}"
+    if ((recursive)); then
+        if [[ ${include} =~ .+ ]]; then
+            aws s3 cp "${s3Uri}" "${localPath}" --recursive --exclude "*" --include "${include}"
         else
             aws s3 cp "${s3Uri}" "${localPath}" --recursive
         fi
@@ -237,36 +235,36 @@ function smv() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
     trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
-    local pos_args=()
-    typeset -A opt_args
+    local opt
+    local recursive=0
+    local include=""
 
-    local opt=0
-    for arg; do
-        if ((opt == 1)); then
-            opt_args["-i"]=${arg}
-            opt=0
-
-        elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: $0 <s3Uri> <s3Uri> [-r] [-i partten]"
+    while getopts hri: opt; do
+        case ${opt} in
+        h)
+            echo "Usage: $0 [-h] [-r] [-i wldcard] <s3Uri> [s3Uri]"
+            return 0
+            ;;
+        r)
+            recursive=1
+            ;;
+        i)
+            include="${OPTARG}"
+            ;;
+        \?)
             return 1
-
-        elif [[ "${arg}" == "-r" ]]; then
-            opt_args["-r"]="--recursive"
-
-        elif [[ "${arg}" == "-i" ]]; then
-            opt=1
-        else
-            pos_args+=("${arg}")
-        fi
+            ;;
+        esac
     done
+    ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if ((${#pos_args} > 2)); then
-        echo "Expect 1 or 2 positional argument, got ${#pos_args}"
+    if (($# > 2)); then
+        echo "Expect 1 or 2 positional argument, got $#"
         return 1
     fi
 
-    s3SrcUri="${pos_args[1]}"
-    s3DstUri="${pos_args[2]}"
+    s3SrcUri=$1
+    s3DstUri=$2
 
     if [[ "${s3SrcUri}" == "." ]]; then
         s3SrcUri="${s3_pwd%'/'}/"
@@ -277,6 +275,7 @@ function smv() {
 
     if [[ "${s3DstUri}" == "" || "${s3DstUri}" == "." ]]; then
         s3DstUri="${s3_pwd%'/'}/"
+        
     elif _is_relative_path "${s3DstUri}"; then
         s3DstUri="${s3_pwd%'/'}/${s3DstUri}"
     fi
@@ -286,9 +285,9 @@ function smv() {
         return 1
     fi
 
-    if [[ ${opt_args["-r"]} == "--recursive" ]]; then
-        if [[ ${opt_args["-i"]} =~ .+ ]]; then
-            aws s3 mv "${s3SrcUri}" "${s3DstUri}" --recursive --exclude "*" --include "${opt_args["-i"]}"
+    if ((recursive)); then
+        if [[ ${include} =~ .+ ]]; then
+            aws s3 mv "${s3SrcUri}" "${s3DstUri}" --recursive --exclude "*" --include "${include}"
         else
             aws s3 mv "${s3SrcUri}" "${s3DstUri}" --recursive
         fi
@@ -303,45 +302,46 @@ function srm() {
     if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
     trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
-    local pos_args=()
-    typeset -A opt_args
+    local opt
+    local recursive=0
+    local include=""
 
-    local opt=0
-    for arg; do
-        if ((opt == 1)); then
-            opt_args["-i"]=${arg}
-            opt=0
-
-        elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: $0 [s3Uri] [-r] [-i partten]"
+    while getopts hri: opt; do
+        case ${opt} in
+        h)
+            echo "Usage: $0 [-h] [-r] [-i wldcard] [s3Uri]"
+            return 0
+            ;;
+        r)
+            recursive=1
+            ;;
+        i)
+            include="${OPTARG}"
+            ;;
+        \?)
             return 1
-
-        elif [[ "${arg}" == "-r" ]]; then
-            opt_args["-r"]="--recursive"
-
-        elif [[ "${arg}" == "-i" ]]; then
-            opt=1
-        else
-            pos_args+=("${arg}")
-        fi
+            ;;
+        esac
     done
+    ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if ((${#pos_args} > 1)); then
-        echo "Expect 0 or 1 positional argument, got ${#pos_args}"
+    if (($# > 1)); then
+        echo "Expect 0 or 1 positional argument, got $#"
         return 1
     fi
 
-    local s3Uri="${pos_args[1]}"
+    local s3Uri=$1
 
     if [[ "${s3Uri}" == "" || "${s3Uri}" == "." ]]; then
         s3Uri="${s3_pwd%'/'}/"
+        
     elif _is_relative_path "${s3Uri}"; then
         s3Uri="${s3_pwd%'/'}/${s3Uri}"
     fi
 
-    if [[ ${opt_args["-r"]} == "--recursive" ]]; then
-        if [[ ${opt_args["-i"]} =~ .+ ]]; then
-            aws s3 rm "${s3Uri}" --recursive --exclude "*" --include "${opt_args["-i"]}"
+    if ((recursive)); then
+        if [[ ${include} =~ .+ ]]; then
+            aws s3 rm "${s3Uri}" --recursive --exclude "*" --include "${include}"
         else
             aws s3 rm "${s3Uri}" --recursive
         fi
@@ -358,52 +358,4 @@ function _is_relative_path() {
         return 0
     fi
     return 1
-}
-
-function getOptsFunction() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    local OPTIND
-    while getopts ":c:l:u:s:" opt; do
-        case "$opt" in
-        c) # default character to display if no weather, leave empty for none
-            c="$OPTARG"
-            ;;
-        l) # supply city name instead of using internet
-            l="$OPTARG"
-            ;;
-        u) # how often to update weather in seconds
-            u="$OPTARG"
-            ;;
-        s) # weather update alert string to supply, if any
-            s="$OPTARG"
-            ;;
-        h)
-            # echo the help file
-            ;;
-        \?)
-            echo "Invalid option: -$OPTARG" >&2
-            ;;
-        :)
-            echo "Option -$OPTARG requires an argument." >&2
-            exit 1
-            ;;
-        esac
-    done
-
-    shift $((OPTIND - 1))
-
-    # set defaults if command not supplied
-    if [ -z "$u" ]; then u=10800; fi
-    if [ -z "$c" ]; then c="$"; fi
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
-}
-
-function arg_parse() {
-    recursive=0
-    for arg; do
-        if [[ "${arg}" == "-r" ]]; then
-            recursive=1
-        fi
-    done
-    echo $recursive
 }
