@@ -44,7 +44,7 @@ function sls() {
     done
 
     if [[ ${opt_args["-h"]} == "--help" ]]; then
-        echo "Usage: sls [s3Uri] [-r]"
+        echo "Usage: $0 [s3Uri] [-r]"
         return 1
     fi
 
@@ -76,7 +76,7 @@ function scd() {
     trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
 
     if (($# > 1)); then
-        echo "Usage: scd [s3Uri]"
+        echo "Usage: $0 [s3Uri]"
         return 1
     fi
 
@@ -123,7 +123,7 @@ function sup() {
             opt=0
 
         elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: sup <LocalPath> <S3Uri> [-r] [-i partten]"
+            echo "Usage: $0 <LocalPath> <S3Uri> [-r] [-i partten]"
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -189,7 +189,7 @@ function sdown() {
             opt=0
 
         elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: sdown <s3Uri> <LocalPath> [-r] [-i partten]"
+            echo "Usage: $0 <s3Uri> <LocalPath> [-r] [-i partten]"
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -247,7 +247,7 @@ function smv() {
             opt=0
 
         elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: smv <s3Uri> <s3Uri> [-r] [-i partten]"
+            echo "Usage: $0 <s3Uri> <s3Uri> [-r] [-i partten]"
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
@@ -313,7 +313,7 @@ function srm() {
             opt=0
 
         elif [[ "${arg}" == "-h" ]]; then
-            echo "Usage: srm [s3Uri] [-r] [-i partten]"
+            echo "Usage: $0 [s3Uri] [-r] [-i partten]"
             return 1
 
         elif [[ "${arg}" == "-r" ]]; then
