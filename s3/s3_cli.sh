@@ -3,8 +3,6 @@ declare s3_debug=0
 
 s3_pwd="s3://"
 s3_old_pwd="s3://"
-s3_open_debug="set -vx"
-s3_close_debug="set +vx"
 
 # functions declaration
 function spwd() {
@@ -22,8 +20,8 @@ function sdebug() {
 }
 
 function sls() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    if ((s3_debug == 1)); then set -vx; fi
+    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
 
     local opt
     local recursive=0
@@ -63,13 +61,11 @@ function sls() {
     else
         aws s3 ls ${s3Uri} --human-readable
     fi
-
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
 }
 
 function scd() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    if ((s3_debug == 1)); then set -vx; fi
+    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
 
     if (($# > 1)); then
         echo "Usage: $0 [s3Uri]"
@@ -101,13 +97,11 @@ function scd() {
     else
         echo "scd: no such object, prefix, or bucket: ${s3Uri}"
     fi
-
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
 }
 
 function sup() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    if ((s3_debug == 1)); then set -vx; fi
+    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
 
     local opt
     local recursive=0
@@ -168,13 +162,11 @@ function sup() {
     else
         aws s3 cp "${localPath}" "${s3Uri}"
     fi
-
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
 }
 
 function sdown() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    if ((s3_debug == 1)); then set -vx; fi
+    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
     
     local opt
     local recursive=0
@@ -227,13 +219,11 @@ function sdown() {
     else
         aws s3 cp "${s3Uri}" "${localPath}"
     fi
-
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
 }
 
 function smv() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    if ((s3_debug == 1)); then set -vx; fi
+    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
 
     local opt
     local recursive=0
@@ -294,13 +284,11 @@ function smv() {
     else
         aws s3 mv "${s3SrcUri}" "${s3DstUri}"
     fi
-
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
 }
 
 function srm() {
-    if ((s3_debug == 1)); then eval "${s3_open_debug}"; fi
-    trap "if ((s3_debug == 1)); then ${s3_close_debug}; fi" EXIT
+    if ((s3_debug == 1)); then set -vx; fi
+    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
 
     local opt
     local recursive=0
@@ -348,8 +336,6 @@ function srm() {
     else
         aws s3 rm "${s3Uri}"
     fi
-
-    if ((s3_debug == 1)); then eval "${s3_close_debug}"; fi
 }
 
 function _is_relative_path() {
