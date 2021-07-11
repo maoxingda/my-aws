@@ -32,7 +32,7 @@ auxiliary function, emulate for system command cd
 
 implementation for `aws s3 cp [-h] [-r] [-i wildcard] <locaPath> <s3Uri>`
 
-##### <font color=red>sdown</font>
+##### <font color=red>sdo</font>
 
 implementation for `aws s3 cp [-h] [-r] [-i wildcard] <s3Uri> <locaPath>`
 

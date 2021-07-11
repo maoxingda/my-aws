@@ -166,7 +166,7 @@ function sup() {
     fi
 }
 
-function sdown() {
+function sdo() {
     if ((s3_debug == 1)); then set -vx; fi
     trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
     
