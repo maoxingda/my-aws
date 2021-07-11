@@ -1,4 +1,4 @@
-#### aws
+#### aws:zzz:
 
 my aws cli
 
@@ -16,7 +16,7 @@ usage:
 
 print working directory
 
-##### <font color=red>sdebug</font>
+##### <font color=red>sdb</font>
 
 set -vx & set +vx  option for function
 

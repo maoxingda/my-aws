@@ -11,7 +11,7 @@ function spwd() {
 
 # TODO:
 
-function sdebug() {
+function sdb() {
     if ((s3_debug == 1)); then
         s3_debug=0
         echo "debug switch off"
