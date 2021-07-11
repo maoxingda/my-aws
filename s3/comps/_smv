@@ -1,0 +1,4 @@
+#compdef smv
+
+_alternative \
+    "s3Uri:object or prefix or bucket:($(aws s3 ls "${s3_pwd}"))"

@@ -28,11 +28,11 @@ implementation for `aws s3 ls [-h] [-r]`
 
 auxiliary function, emulate for system command cd
 
-##### <font color=red>sup</font>
+##### <font color=red>supload</font>
 
 implementation for `aws s3 cp [-h] [-r] [-i wildcard] <locaPath> <s3Uri>`
 
-##### <font color=red>sdo</font>
+##### <font color=red>sdownload</font>
 
 implementation for `aws s3 cp [-h] [-r] [-i wildcard] <s3Uri> <locaPath>`
 

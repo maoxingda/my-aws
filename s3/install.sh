@@ -1,16 +1,22 @@
-aws_s3_cli=$(find "$(PWD)" -type f -name "s3_cli.sh")
+pwd="${PWD}"
+on_my_zsh_fun="${HOME}/.oh-my-zsh/functions/"
 
-if [[ "${SHELL}" =~ "zsh" ]]; then
-    # shellcheck disable=SC2129
-    # shellcheck disable=SC2028
-    echo "\n# >>> aws s3 cli initialize >>>" >>"${HOME}/.zshrc"
-    echo ". \"${aws_s3_cli}\"" >>"${HOME}/.zshrc"
-    echo "# <<< aws s3 cli initialize <<<" >>"${HOME}/.zshrc"
+if ! [[ -e "template/find_func.sh" ]]; then
 
-elif [[ "${SHELL}" =~ "bash" ]]; then
-    # shellcheck disable=SC2129
-    # shellcheck disable=SC2028
-    echo -e "\n# >>> aws s3 cli initialize >>>" >>"${HOME}/.bashrc"
-    echo ". \"${aws_s3_cli}\"" >>"${HOME}/.bashrc"
-    echo "# <<< aws s3 cli initialize <<<" >>"${HOME}/.bashrc"
+    cd "template" || exit 1
+
+    cp "find_func.sh.template" "find_func.sh"
+
+    sed -i "" "s#search_path_placeholder#${pwd}#" "find_func.sh"
+
+    echo >>"${HOME}/.zshrc"
+    cat "find_func.sh" >>"${HOME}/.zshrc"
 fi
+
+if ! [[ -d "${on_my_zsh_fun}" ]]; then
+    mkdir -p "${on_my_zsh_fun}"
+fi
+
+for comp_fun in $(find "${pwd}/comps" -type f -name "_*"); do
+    cp "${comp_fun}" "${on_my_zsh_fun}"
+done

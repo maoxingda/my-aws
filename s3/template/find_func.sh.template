@@ -1,0 +1,9 @@
+# >>> aws s3 cli initialize >>>
+
+autoload -Uz compinit && compinit
+
+for fun in $(find "search_path_placeholder" -type f -name "*.zsh"); do
+    . "${fun}"
+done
+
+# <<< aws s3 cli initialize <<<
