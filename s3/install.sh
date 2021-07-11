@@ -9,7 +9,7 @@ if ! [[ -e "template/find_func.sh" ]]; then
 
     sed -i "" "s#search_path_placeholder#${pwd}#" "find_func.sh"
 
-    echo >>"${HOME}/.zshrc"
+    print >>"${HOME}/.zshrc"
     cat "find_func.sh" >>"${HOME}/.zshrc"
 fi
 

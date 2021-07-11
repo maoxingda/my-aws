@@ -9,7 +9,7 @@ function smv() {
     while getopts hri: opt; do
         case ${opt} in
         h)
-            echo "Usage: $0 [-h] [-r] [-i wldcard] <s3Uri> [s3Uri]"
+            print "Usage: $0 [-h] [-r] [-i wldcard] <s3Uri> [s3Uri]"
             return 0
             ;;
         r)
@@ -26,7 +26,7 @@ function smv() {
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
     if (($# > 2)); then
-        echo "Expect 1 or 2 positional argument, got $#"
+        print "Expect 1 or 2 positional argument, got $#"
         return 1
     fi
 
@@ -48,7 +48,7 @@ function smv() {
     fi
 
     if [[ "${s3SrcUri}" == "${s3DstUri}" ]]; then
-        echo "The source is same as destination"
+        print "The source is same as destination"
         return 1
     fi
 
