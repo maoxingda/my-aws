@@ -1,4 +1,6 @@
 #compdef scd
 
+# suppress warning reference unassigned variable check
+
 _alternative \
     "s3Uri:object or prefix or bucket:($(aws s3 ls "${s3_pwd}"))"
