@@ -8,38 +8,39 @@ just as an aid to myself
 the function name prefix character `s` stands for aws service s3
 
 usage:
-​	function -h 
 
-​	e.g. sls -h
+> function -h 
+
+> e.g. sls -h
 
 ##### <font color=red>spwd</font>
 
-print working directory
+> print working directory
 
 ##### <font color=red>sdb</font>
 
-set -vx & set +vx  option for function
+> set -vx & set +vx  option for function
 
 ##### <font color=red>sls</font>
 
-implementation for `aws s3 ls [-h] [-r]`
+> implementation for `aws s3 ls [-h] [-r]`
 
 ##### <font color=red>scd</font>
 
-auxiliary function, emulate for system command cd
+> auxiliary function, emulate for system command cd
 
 ##### <font color=red>supload</font>
 
-implementation for `aws s3 cp [-h] [-r] [-i wildcard] <locaPath> <s3Uri>`
+> implementation for `aws s3 cp [-h] [-r] [-i wildcard] <locaPath> <s3Uri>`
 
 ##### <font color=red>sdownload</font>
 
-implementation for `aws s3 cp [-h] [-r] [-i wildcard] <s3Uri> <locaPath>`
+> implementation for `aws s3 cp [-h] [-r] [-i wildcard] <s3Uri> <locaPath>`
 
 ##### <font color=red>smv</font>
 
-implementation for `aws s3 mv [-h] [-r] [-i wildcard] <s3Uri> <s3Uri>`
+> implementation for `aws s3 mv [-h] [-r] [-i wildcard] <s3Uri> <s3Uri>`
 
 ##### <font color=red>srm</font>
 
-implementation for `aws s3 rm [-h] [-r] [-i wildcard] <s3Uri>`
+> implementation for `aws s3 rm [-h] [-r] [-i wildcard] <s3Uri>`
