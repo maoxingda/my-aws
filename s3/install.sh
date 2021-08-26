@@ -6,10 +6,12 @@ if ! [[ -e "template/.find_func" ]]; then
 
     cp ".find_func.template" ".find_func"
 
-    # TODO: OS X or Linux
-    sed -i "" "s#PWD#${root}#" ".find_func"
+    if [[ $(uname) = Darwin ]]; then
+        sed -i "" "s#PWD#${root}#" ".find_func"
+    else
+        sed -i "s#PWD#${root}#" ".find_func"
+    fi
 
-    # TODO: print to echo
     print >>"${HOME}/.zshrc"
 
     cat ".find_func" >>"${HOME}/.zshrc"
