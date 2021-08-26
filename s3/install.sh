@@ -1,4 +1,4 @@
-root=$(dirname "$0")
+root=$(pwd)
 if ! [[ -e "template/.find_func" ]]; then
 
     pushd "template" || exit 1
