@@ -54,7 +54,7 @@ function srm() {
         echo "Bucket names must begin and end with a letter or number."
         return 1
 
-    elif is_relative_path "${s3Uri}"; then
+    elif is_relpath "${s3Uri}"; then
         # shellcheck disable=SC2154
         s3Uri="${s3_pwd%/}/${s3Uri}"
     fi

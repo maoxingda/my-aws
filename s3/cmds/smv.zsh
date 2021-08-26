@@ -36,14 +36,14 @@ function smv() {
     if [[ "${s3SrcUri}" == "." ]]; then
         s3SrcUri="${s3_pwd%'/'}/"
 
-    elif is_relative_path "${s3SrcUri}"; then
+    elif is_relpath "${s3SrcUri}"; then
         s3SrcUri="${s3_pwd%'/'}/${s3SrcUri}"
     fi
 
     if [[ "${s3DstUri}" == "" || "${s3DstUri}" == "." ]]; then
         s3DstUri="${s3_pwd%'/'}/"
 
-    elif is_relative_path "${s3DstUri}"; then
+    elif is_relpath "${s3DstUri}"; then
         s3DstUri="${s3_pwd%'/'}/${s3DstUri}"
     fi
 

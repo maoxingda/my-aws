@@ -22,7 +22,7 @@ function scd() {
             s3Uri="${s3Uri}/"
         fi
 
-    elif is_relative_path "${s3Uri}"; then
+    elif is_relpath "${s3Uri}"; then
         s3Uri="${s3_pwd%'/'}/${s3Uri%'/'}/"
     fi
 
