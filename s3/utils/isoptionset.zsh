@@ -1,7 +1,7 @@
 function isoptionset() {
     if [[ -o ${1} ]]; then
-        echo "yes"
+        tip "yes"
     else
-        echo "no"
+        tip "no"
     fi
 }
