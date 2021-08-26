@@ -1,4 +1,3 @@
-set -x
 root=$(dirname "$0")
 if ! [[ -e "template/.find_func" ]]; then
 
