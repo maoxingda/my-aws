@@ -44,3 +44,15 @@ usage:
 ##### <font color=red>srm</font>
 
 > implementation for `aws s3 rm [-h] [-r] [-i wildcard] <s3Uri>`
+
+#### Bucket naming rules
+
+The following rules apply for naming buckets in Amazon S3:
+
+- Bucket names must be between ==3 and 63 characters long.==
+
+- Bucket names can consist only of ==lowercase letters, numbers, dots (.), and hyphens (-).==
+
+- Bucket names must begin and end with ==a letter or number.==
+
+  

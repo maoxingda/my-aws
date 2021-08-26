@@ -2,7 +2,7 @@
 
 autoload -Uz compinit && compinit
 
-for fun in $(find "search_path_placeholder" -type f -name "*.zsh"); do
+for fun in PWD/**/*.zsh; do
     . "${fun}"
 done
 
