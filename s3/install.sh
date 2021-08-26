@@ -1,4 +1,4 @@
-root=$(dirname "$0")
+root=$(pwd)
 if ! [[ -e "template/.find_func" ]]; then
 
     pushd "template" || exit 1
@@ -11,7 +11,7 @@ if ! [[ -e "template/.find_func" ]]; then
         sed -i "s#PWD#${root}#" ".find_func"
     fi
 
-    print >>"${HOME}/.zshrc"
+    echo >>"${HOME}/.zshrc"
 
     cat ".find_func" >>"${HOME}/.zshrc"
 
