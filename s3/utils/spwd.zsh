@@ -1,3 +1,3 @@
 function spwd() {
-    print "${s3_pwd}"
+    echo "${s3_pwd}"
 }

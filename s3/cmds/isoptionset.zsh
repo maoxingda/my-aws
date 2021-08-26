@@ -1,7 +1,7 @@
 function isoptionset() {
     if [[ -o ${1} ]]; then
-        print "yes"
+        echo "yes"
     else
-        print "no"
+        echo "no"
     fi
 }

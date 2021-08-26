@@ -9,7 +9,7 @@ function supload() {
     while getopts hri: opt; do
         case ${opt} in
         h)
-            print "Usage: $0 [-h] [-r] [-i wldcard] [localPath] [s3Uri]"
+            echo "Usage: $0 [-h] [-r] [-i wldcard] [localPath] [s3Uri]"
             return 0
             ;;
         r)
@@ -26,7 +26,7 @@ function supload() {
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
     if (($# > 2)); then
-        print "Expect 1 or 2 positional argument, got $#"
+        echo "Expect 1 or 2 positional argument, got $#"
         return 1
     fi
 
@@ -48,7 +48,7 @@ function supload() {
     fi
 
     if [[ ${s3Uri} == "s3://" ]]; then
-        print "missing bucket name"
+        echo "missing bucket name"
         return 1
     fi
 

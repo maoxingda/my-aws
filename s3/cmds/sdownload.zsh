@@ -9,7 +9,7 @@ function sdownload() {
     while getopts hri: opt; do
         case ${opt} in
         h)
-            print "Usage: $0 [-h] [-r] [-i wldcard] [s3Uri] [localPath]"
+            echo "Usage: $0 [-h] [-r] [-i wldcard] [s3Uri] [localPath]"
             return 0
             ;;
         r)
@@ -26,7 +26,7 @@ function sdownload() {
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
     if (($# > 2)); then
-        print "Expect 1 or 2 positional argument, got $#"
+        echo "Expect 1 or 2 positional argument, got $#"
         return 1
     fi
 

@@ -1,9 +1,9 @@
 function sdb() {
     if ((s3_debug == 1)); then
         s3_debug=0
-        print "debug off"
+        echo "debug off"
     else
         s3_debug=1
-        print "debug on"
+        echo "debug on"
     fi
 }

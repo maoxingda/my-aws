@@ -8,7 +8,7 @@ function sls() {
     while getopts hr opt; do
         case ${opt} in
         h)
-            print "Usage: $0 [-r] [s3Uri]"
+            echo "Usage: $0 [-r] [s3Uri]"
             return 0
             ;;
         r)
@@ -22,7 +22,7 @@ function sls() {
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
     if (($# > 1)); then
-        print "Expect 0 or 1 positional argument, got $#"
+        echo "Expect 0 or 1 positional argument, got $#"
         return 1
     fi
 

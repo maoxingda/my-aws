@@ -3,7 +3,7 @@ function scd() {
     trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
 
     if (($# > 1)); then
-        print "Usage: $0 [s3Uri]"
+        echo "Usage: $0 [s3Uri]"
         return 1
     fi
 
@@ -31,14 +31,14 @@ function scd() {
             s3_old_pwd=${s3_pwd}
             s3_pwd=${s3Uri}
         else
-            print "scd: no such object, prefix, or bucket: ${s3Uri}"
+            echo "scd: no such object, prefix, or bucket: ${s3Uri}"
         fi
     else
         if eval "aws s3 ls ${s3Uri} --human-readable"; then
             s3_old_pwd=${s3_pwd}
             s3_pwd=${s3Uri}
         else
-            print "scd: no such object, prefix, or bucket: ${s3Uri}"
+            echo "scd: no such object, prefix, or bucket: ${s3Uri}"
         fi
     fi
 }
