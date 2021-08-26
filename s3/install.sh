@@ -11,6 +11,8 @@ if ! [[ -e "template/.find_func" ]]; then
         sed -i "s#PWD#${root}#" ".find_func"
     fi
 
+    eval "zsh ${root}/utils/zshrc.zsh"
+
     echo >>"${HOME}/.zshrc"
 
     cat ".find_func" >>"${HOME}/.zshrc"
