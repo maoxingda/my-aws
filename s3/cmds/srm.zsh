@@ -10,8 +10,14 @@ function srm() {
     while getopts hdri: opt; do
         case ${opt} in
         h)
-            print "Usage:"
-            print "    $0 [-h] [-r] [-i wildcard] [-d dryrun] <S3Uri>\n"
+            echo "Usage:"
+            echo "    $0 [-h] [-r] [-d] [-i <wildcard>] <S3Uri>" && echo
+
+            echo "    -h Print this message, then exit" && echo
+
+            echo "    -r Command is performed on all files or objects under the specified directory or prefix."
+            echo "    -d Displays the operations that would be performed using the specified command without actually running them."
+            echo "    -i Don’t exclude files or objects in the command that match the specified pattern. See http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#use-of-exclude-and-include-filters"
 
             return 0
             ;;
@@ -24,7 +30,7 @@ function srm() {
         i)
             include="${OPTARG}"
             ;;
-        \?)
+        ?)
             return 1
             ;;
         esac
@@ -32,20 +38,20 @@ function srm() {
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
     if (($# == 0)); then
-        print "Expect S3Uri argument, got none"
+        echo "Expect argument: S3Uri, got none"
         return 1
     fi
 
-    if (( $# > 1 )); then
+    if (($# > 1)); then
         # shellcheck disable=SC2145
-        print "Expect one argument: S3Uri, got $@"
+        echo "Expect 1 positional argument: S3Uri, got: $@"
         return 1
     fi
 
     local s3Uri=$1
 
-    if [[ ${s3Uri} == .* ]]; then
-        print "Bucket names must begin and end with ==a letter or number.=="
+    if [[ ${s3Uri:0:1} == . ]]; then
+        echo "Bucket names must begin and end with a letter or number."
         return 1
 
     elif is_relative_path "${s3Uri}"; then
@@ -53,25 +59,13 @@ function srm() {
         s3Uri="${s3_pwd%/}/${s3Uri}"
     fi
 
-    if ((recursive)); then
-        if [[ ${include} =~ .+ ]]; then
-            if ((dryrun == 1)); then
-                aws s3 rm "${s3Uri}" --recursive --exclude "*" --include "${include} --dryrun"
-            else
-                aws s3 rm "${s3Uri}" --recursive --exclude "*" --include "${include}"
-            fi
-        else
-            if ((dryrun == 1)); then
-                aws s3 rm "${s3Uri}" --recursive --dryrun
-            else
-                aws s3 rm "${s3Uri}" --recursive
-            fi
-        fi
-    else
-        if ((dryrun == 1)); then
-            aws s3 rm "${s3Uri}" --dryrun
-        else
-            aws s3 rm "${s3Uri}"
-        fi
-    fi
+    cmd="aws s3 rm ${s3Uri}"
+
+    ((dryrun)) && cmd="${cmd} --dryrun"
+
+    ((recursive)) && cmd="${cmd} --recursive"
+
+    [[ -n ${include} ]] && cmd="${cmd} --exclude '*' --include '${include}'"
+
+    eval "${cmd}"
 }
