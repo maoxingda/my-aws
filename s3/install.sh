@@ -46,7 +46,7 @@ fi
 if [[ $(uname) == Darwin ]]; then
     sed -i '' -e '/^$/N;/\n$/D' "${cfg}"
 else
-    sed -e '/^$/N;/\n$/D' "${cfg}"
+    sed -i -e '/^$/N;/\n$/D' "${cfg}"
 fi
 
 # Copy custom completion functions
