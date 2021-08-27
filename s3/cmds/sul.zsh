@@ -54,7 +54,7 @@ function sul() {
     done
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if (($# > 2)); then
+    if (($# == 0 || $# > 2)); then
         tip "Expect 1 or 2 positional argument: <LocalPath> [S3Uri], got $#"
         return 1
     fi
