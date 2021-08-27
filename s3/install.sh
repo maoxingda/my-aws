@@ -1,26 +1,54 @@
 root=$(pwd)
+cfg=~/.zshrc
+ff='.find_func'
 comps=~/.zshcomps
-if ! [[ -e "template/.find_func" ]]; then
+
+# Parse command line arguments
+while getopts 'r' opt; do
+    case ${opt} in
+    r)
+        reinstall=1
+        ;;
+    ?)
+        exit 1
+        ;;
+    esac
+done
+
+# Save configuration
+if ((reinstall)) || [[ ! -f "template/${ff}" ]]; then
 
     pushd "template" || exit 1
 
-    cp ".find_func.template" ".find_func"
+    cp ".find_func.template" "${ff}"
 
-    if [[ $(uname) = Darwin ]]; then
-        sed -i "" "s#PWD#${root}#" ".find_func"
+    if [[ $(uname) == Darwin ]]; then
+        sed -i "" "s#PWD#${root}#" "${ff}"
     else
-        sed -i "s#PWD#${root}#" ".find_func"
+        sed -i "s#PWD#${root}#" "${ff}"
     fi
 
-    eval "zsh -x ${root}/utils/zshrc.sh"
+    cfgcmd="zsh ${root}/utils/zshrc.sh"
 
-    echo >>"${HOME}/.zshrc"
+    [[ -o x ]] && cfgcmd="zsh -x ${cfgcmd:4:256}"
 
-    cat ".find_func" >>"${HOME}/.zshrc"
+    eval "${cfgcmd}"
+
+    echo >>"${cfg}"
+
+    cat "${ff}" >>"${cfg}"
 
     popd || exit 1
 fi
 
+# Remove the continuation blank lines
+if [[ $(uname) == Darwin ]]; then
+    sed -i '' -e '/^$/N;/\n$/D' "${cfg}"
+else
+    sed -e '/^$/N;/\n$/D' "${cfg}"
+fi
+
+# Copy custom completion functions
 on_my_zsh_fun="${HOME}/.oh-my-zsh/functions/"
 
 [[ -d "${on_my_zsh_fun}" ]] || mkdir -p "${on_my_zsh_fun}"
