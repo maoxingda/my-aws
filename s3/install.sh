@@ -29,9 +29,9 @@ if ((reinstall)) || [[ ! -f "template/${ff}" ]]; then
         sed -i "s#PWD#${root}#" "${ff}"
     fi
 
-    cfgcmd="zsh ${root}/utils/zshrc.sh"
+    cfgcmd="zsh -x ${root}/utils/zshrc.sh"
 
-    [[ -o x ]] && cfgcmd="zsh -x ${cfgcmd:4:256}"
+    [[ ! -o x ]] && cfgcmd="${cfgcmd:s/ -x//}"
 
     eval "${cfgcmd}"
 
