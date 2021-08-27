@@ -1,4 +1,5 @@
 cfg="${HOME}/.zshrc"
+cfgtmp="${cfg}.tmp"
 
 beg=0 # begin line of the configuration
 end=0 # end line of the configuration
@@ -12,14 +13,19 @@ while read -r line; do
 
     ((loopcount++))
 
-    ((end != 0)) && echo "${line}" >"${cfg}"
+    ((end != 0)) && echo "${line}" >>"${cfgtmp}"
 
     if [[ ${line} == "${beg_cfg}" ]]; then
         beg=${loopcount}
+
     elif [[ ${line} == "${end_cfg}" ]]; then
         end=${loopcount}
     fi
 
-   ((beg == 0)) && echo "${line}" >"${cfg}"
+    ((beg == 0)) && echo "${line}" >>"${cfgtmp}"
 
 done <"${cfg}"
+
+cp -f "${cfgtmp}" "${cfg}"
+
+rm -f "${cfgtmp}"
