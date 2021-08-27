@@ -1,4 +1,5 @@
 root=$(pwd)
+comps=~/.zshcomps
 if ! [[ -e "template/.find_func" ]]; then
 
     pushd "template" || exit 1
@@ -25,5 +26,6 @@ on_my_zsh_fun="${HOME}/.oh-my-zsh/functions/"
 [[ -d "${on_my_zsh_fun}" ]] || mkdir -p "${on_my_zsh_fun}"
 
 for comp_fun in comps/**/_*; do
+    # TODO: save manifest files reinstall
     cp -f "${comp_fun}" "${on_my_zsh_fun}"
 done
