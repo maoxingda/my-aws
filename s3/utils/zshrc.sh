@@ -9,7 +9,7 @@ end_cfg='# <<< aws s3 cli initialize <<<'
 
 loopcount=0
 
-while read -r line; do
+while IFS=$'\n' read -r line; do
 
     ((loopcount++))
 
