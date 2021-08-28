@@ -1,3 +1,8 @@
+# Can only support zsh shell
+[[ -z ${ZSH_VERSION} ]] &&
+    printf '\033[0;31mCan only support zsh shell currently. Sorry, bye...\033[0m' &&
+    exit 1
+
 root=$(pwd)
 cfg=~/.zshrc
 ff='.find_func'
