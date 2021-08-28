@@ -29,15 +29,15 @@ function sls() {
     local s3_uri="$1"
 
     if [[ -z ${s3_uri} || ${s3_uri} == "." ]]; then
-        s3_uri="${s3_pwd%%/}"
+        s3_uri="${s3_pwd}"
 
     elif is_relpath "${s3_uri}"; then
-        s3_uri="${s3_pwd%%/}/${s3_uri}"
+        s3_uri="${s3_pwd%/}/${s3_uri}"
     fi
 
-    cmd="aws s3 ls ${s3_uri} --human-readable"
+    cmd="aws s3 ls s3:/${s3_uri%/}/ --human-readable"
 
     ((recursive)) && cmd="${cmd} --recursive"
 
-    eval "${cmd%%/}/"
+    eval "${cmd}"
 }

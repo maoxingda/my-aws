@@ -10,13 +10,13 @@ function scd() {
         s3_old_pwd="${s3_pwd}"
         s3_uri='/'
         s3_pwd='/'
-        retrun 0
+        return 0
 
     elif [[ ${s3_uri} == "-" ]]; then
         tmp_pwd="${s3_pwd}"
         s3_pwd="${s3_old_pwd}"
         s3_old_pwd="${tmp_pwd}"
-        retrun 0
+        return 0
 
     elif [[ ${s3_uri} == ".." ]]; then
         s3_old_pwd="${s3_pwd}"
@@ -24,20 +24,20 @@ function scd() {
         return 0
 
     elif is_relpath "${s3_uri}"; then
-        s3_uri="${s3_pwd%%/}/${s3_uri}"
+        s3_uri="${s3_pwd%/}/${s3_uri}"
     fi
 
     not_find_msg="$0: no such object, prefix, or bucket: ${s3_uri}"
 
     if ((s3_scd_quiet)); then
-        if eval "aws s3 ls ${s3_uri} >/dev/null 2>&1"; then
+        if eval "aws s3 ls s3:/${s3_uri%/}/ >/dev/null 2>&1"; then
             s3_old_pwd=${s3_pwd}
             s3_pwd=${s3_uri}
         else
             tip "${not_find_msg}"
         fi
     else
-        if eval "aws s3 ls ${s3_uri} --human-readable"; then
+        if eval "aws s3 ls s3:/${s3_uri%/}/ --human-readable"; then
             s3_old_pwd=${s3_pwd}
             s3_pwd=${s3_uri}
         else
