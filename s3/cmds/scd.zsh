@@ -4,42 +4,47 @@ function scd() {
 
     (($# > 1)) && tip "Usage: $0 [S3Uri]" && return 1
 
-    local s3_uri="$1"
+    local S3Uri="$1"
 
     if (($# == 0)); then
         s3_old_pwd="${s3_pwd}"
-        s3_uri='/'
+        S3Uri='/'
         s3_pwd='/'
         return 0
 
-    elif [[ ${s3_uri} == "-" ]]; then
+    elif [[ ${S3Uri} == "-" ]]; then
         tmp_pwd="${s3_pwd}"
         s3_pwd="${s3_old_pwd}"
         s3_old_pwd="${tmp_pwd}"
         return 0
 
-    elif [[ ${s3_uri} == ".." ]]; then
+    elif [[ ${S3Uri} == ".." ]]; then
         s3_old_pwd="${s3_pwd}"
         s3_pwd="${s3_pwd%/*}"
         return 0
 
-    elif is_relpath "${s3_uri}"; then
-        s3_uri="${s3_pwd%/}/${s3_uri}"
+    elif is_relpath "${S3Uri}"; then
+        if [[ ${s3_pwd} == '/' ]]; then
+            S3Uri="/${S3Uri}"
+        else
+            S3Uri="${s3_pwd}/${S3Uri}"
+        fi
     fi
 
-    not_find_msg="$0: no such object, prefix, or bucket: ${s3_uri}"
+    not_find_msg="$0: no such object, prefix, or bucket: ${S3Uri}"
 
     if ((s3_scd_quiet)); then
-        if eval "aws s3 ls s3:/${s3_uri%/}/ >/dev/null 2>&1"; then
+        if eval "aws s3 ls s3:/${S3Uri} >/dev/null 2>&1"; then
             s3_old_pwd=${s3_pwd}
-            s3_pwd=${s3_uri}
+            s3_pwd=${S3Uri}
         else
             tip "${not_find_msg}"
         fi
     else
-        if eval "aws s3 ls s3:/${s3_uri%/}/ --human-readable"; then
+        if eval "aws s3 ls s3:/${S3Uri} --human-readable"; then
+            eval "aws s3 ls s3:/${S3Uri%/}/ --human-readable"
             s3_old_pwd=${s3_pwd}
-            s3_pwd=${s3_uri}
+            s3_pwd=${S3Uri}
         else
             tip "${not_find_msg}"
         fi

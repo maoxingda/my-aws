@@ -1,6 +1,6 @@
 function sls() {
     if ((s3_debug == 1)); then set -vx; fi
-    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
+    trap 'if ((s3_debug == 1)); then set +vx; fi' EXIT
 
     local opt
     local recursive=0
@@ -26,16 +26,20 @@ function sls() {
         return 2
     fi
 
-    local s3_uri="$1"
+    local S3Uri="$1"
 
-    if [[ -z ${s3_uri} || ${s3_uri} == "." ]]; then
-        s3_uri="${s3_pwd}"
+    if [[ -z ${S3Uri} || ${S3Uri} == '.' ]]; then
+        S3Uri="${s3_pwd}"
 
-    elif is_relpath "${s3_uri}"; then
-        s3_uri="${s3_pwd%/}/${s3_uri}"
+    elif is_relpath "${S3Uri}"; then
+        if [[ ${s3_pwd} == '/' ]]; then
+            S3Uri="/${S3Uri}"
+        else
+            S3Uri="${s3_pwd}/${S3Uri}"
+        fi
     fi
 
-    cmd="aws s3 ls s3:/${s3_uri%/}/ --human-readable"
+    cmd="aws s3 ls s3:/${S3Uri%/}/ --human-readable"
 
     ((recursive)) && cmd="${cmd} --recursive"
 
