@@ -19,7 +19,8 @@ function srm() {
             echo
             tip "    -r Command is performed on all files or objects under the specified directory or prefix."
             tip "    -d Displays the operations that would be performed using the specified command without actually running them."
-            tip "    -i Don’t exclude files or objects in the command that match the specified pattern. See http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#use-of-exclude-and-include-filters"
+            tip "    -i Don’t exclude files or objects in the command that match the specified pattern."
+            tip "       See https://docs.aws.amazon.com/cli/latest/reference/s3/rm.html"
 
             return 0
             ;;

@@ -2,6 +2,19 @@ function scd() {
     if ((s3_debug == 1)); then set -vx; fi
     trap 'if ((s3_debug == 1)); then set +vx; fi' EXIT
 
+    while getopts 'h' opt; do
+        case ${opt} in
+        h)
+            tip "Usage:"
+            tip "    $0 [-h | [S3Uri]]"
+            return 0
+            ;;
+        ?)
+            return 1
+            ;;
+        esac
+    done
+
     (($# > 1)) && tip "Usage: $0 [S3Uri]" && return 1
 
     local S3Uri="$1"
