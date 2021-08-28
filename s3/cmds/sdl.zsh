@@ -1,15 +1,15 @@
 function sdl() {
     if ((s3_debug == 1)); then set -vx; fi
-    trap "if ((s3_debug == 1)); then set +vx; fi" EXIT
+    trap 'if ((s3_debug == 1)); then set +vx; fi' EXIT
 
-    local opt=""
+    local opt=''
     local quiet=0
     local dryrun=0
-    local include=""
+    local include=''
     local recursive=0
-    local nprogress=0
+    local no_progress=0
 
-    while getopts hrdqni: opt; do
+    while getopts 'hrdqni': opt; do
         case ${opt} in
         h)
             tip "NAME"
@@ -19,6 +19,7 @@ function sdl() {
             tip "SYNOPSIS"
             tip "    $0 [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3Uri> [LocalPath]"
 
+            echo
             tip "DESCRIPTION"
             tip "    Copies S3 object to a local file."
 
@@ -42,7 +43,7 @@ function sdl() {
             quiet=1
             ;;
         n)
-            nprogress=1
+            no_progress=1
             ;;
         i)
             include="${{OPTARG}}"
@@ -54,32 +55,39 @@ function sdl() {
     done
     ((OPTIND > 1)) && shift $((OPTIND - 1))
 
-    if (($# > 2)); then
-        tip "Expect 1 or 2 positional argument: <S3Uri> [LocalPath], got $#"
-        return 1
+    typeset -a err
+
+    err[2]='Expect 1 or 2 positional argument: <S3Uri> [LocalPath], got'
+    err[3]='Missing bucket name.'
+
+    if (($# == 0 || $# > 2)); then
+        tip "${err[2]} $#"
+        return 2
     fi
 
-    local s3Uri=$1
-    local localPath=$2
+    local S3Uri="$1"
+    local LocalPath="$2"
 
-    [[ -z ${s3Uri} || ${s3Uri} == "." ]] && s3Uri="${s3_pwd%/}/"
+    [[ ${S3Uri} == "." ]] && S3Uri="${s3_pwd}"
 
-    if is_relpath "${s3Uri}"; then
-        s3Uri="${s3_pwd%/}/${s3Uri%/}/"
+    if is_relpath "${S3Uri}"; then
+        if [[ ${s3_pwd} == '/' ]]; then
+            S3Uri="/${S3Uri}"
+        else
+            S3Uri="${s3_pwd}/${S3Uri}"
+        fi
     fi
 
-    if [[ ${s3Uri} == "s3://" ]]; then
-        tip "Missing bucket name"
-        return 1
+    if [[ ${S3Uri} == '/' ]]; then
+        tip "${err[3]}"
+        return 3
     fi
 
-    [[ ${localPath} == "." ]] && localPath="${PWD}/"
-
-    if is_relpath "${localPath}"; then
-        localPath="${PWD}/${localPath%/}/"
+    if is_relpath "${LocalPath}"; then
+        LocalPath="${PWD}/${LocalPath}"
     fi
 
-    cmd="aws s3 cp ${s3Uri} ${localPath}"
+    cmd="aws s3 cp s3:/${S3Uri} ${LocalPath}"
 
     ((quiet)) && cmd="${cmd} --quiet"
 
@@ -87,7 +95,7 @@ function sdl() {
 
     ((recursive)) && cmd="${cmd} --recursive"
 
-    ((nprogress)) && cmd="${cmd} --no-progress"
+    ((no_progress)) && cmd="${cmd} --no-progress"
 
     [[ -n ${include} ]] && cmd="${cmd} --exclude '*' --include '${include}'"
 
