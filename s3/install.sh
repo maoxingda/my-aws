@@ -16,6 +16,8 @@ while getopts 'r' opt; do
     esac
 done
 
+setopt PUSHD_SILENT
+
 # Save configuration
 if ((reinstall)) || [[ ! -f "template/${ff}" ]]; then
 
@@ -67,7 +69,7 @@ if [[ -f ${manifest} ]]; then
     fi
 fi
 
-for comp_fun in comps/**/_*; do
+for comp_fun in comps/_*; do
     # Save manifest files reinstall or uninstall
     bn=$(basename ${comp_fun})
     cfs+=($bn)

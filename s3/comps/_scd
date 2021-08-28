@@ -1,5 +1,5 @@
 #compdef scd
 
 _alternative \
-    'localPath:filename:_files'
+    'localPath:filename:_files' \
     "s3Uri:object or prefix or bucket:($(aws s3 ls "${s3_pwd}"))"

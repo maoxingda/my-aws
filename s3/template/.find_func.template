@@ -2,7 +2,9 @@
 
 autoload -Uz compinit && compinit
 
-for fun in PWD/**/*.zsh; do
+setopt GLOBSTARSHORT
+
+for fun in PWD/**.zsh; do
     . "${fun}"
 done
 
