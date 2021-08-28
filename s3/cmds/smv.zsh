@@ -1,4 +1,4 @@
-function sdl() {
+function smv() {
     if ((s3_debug == 1)); then set -vx; fi
     trap 'if ((s3_debug == 1)); then set +vx; fi' EXIT
 
@@ -17,11 +17,11 @@ function sdl() {
 
             echo
             tip "SYNOPSIS"
-            tip "    $0 [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3Uri> [LocalPath]"
+            tip "    $0 [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3SrcUri> [S3SrcUri]"
 
             echo
             tip "DESCRIPTION"
-            tip "    Copies S3 object to a local file."
+            tip "    Copies S3 object to another location in S3."
 
             echo
             tip "OPTIONS"
@@ -58,7 +58,7 @@ function sdl() {
 
     typeset -a err
 
-    err[2]='Expect 1 or 2 positional argument: <S3Uri> [LocalPath], got'
+    err[2]='Expect 1 or 2 positional argument: <S3SrcUri> [S3SrcUri], got'
     err[3]='Missing bucket name.'
 
     if (($# == 0 || $# > 2)); then
@@ -66,29 +66,33 @@ function sdl() {
         return 2
     fi
 
-    local S3Uri="$1"
-    local LocalPath="$2"
+    local S3SrcUri="$1"
+    local S3DstUri="$2"
 
-    [[ ${S3Uri} == "." ]] && S3Uri="${s3_pwd}"
+    [[ ${S3SrcUri} == "." ]] && S3SrcUri="${s3_pwd}"
 
-    if is_relpath "${S3Uri}"; then
+    if is_relpath "${S3SrcUri}"; then
         if [[ ${s3_pwd} == '/' ]]; then
-            S3Uri="/${S3Uri}"
+            S3SrcUri="/${S3SrcUri}"
         else
-            S3Uri="${s3_pwd}/${S3Uri}"
+            S3SrcUri="${s3_pwd}/${S3SrcUri}"
         fi
     fi
 
-    if [[ ${S3Uri} == '/' ]]; then
+    if [[ ${S3SrcUri} == '/' ]]; then
         tip "${err[3]}"
         return 3
     fi
 
-    if is_relpath "${LocalPath}"; then
-        LocalPath="${PWD}/${LocalPath}"
+    if is_relpath "${S3DstUri}"; then
+        if [[ ${s3_pwd} == '/' ]]; then
+            S3DstUri="/${S3DstUri}"
+        else
+            S3DstUri="${s3_pwd}/${S3DstUri}"
+        fi
     fi
 
-    cmd="aws s3 cp s3:/${S3Uri} ${LocalPath}"
+    cmd="aws s3 mv s3:/${S3SrcUri} s3:/${S3DstUri}"
 
     ((quiet)) && cmd="${cmd} --quiet"
 
