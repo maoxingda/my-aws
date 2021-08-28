@@ -1,5 +1,5 @@
-#compdef supload
+#compdef sul
 
 _alternative \
     'localPath:filename:_files' \
-    "s3Uri:object or prefix or bucket:($(aws s3 ls "${s3_pwd}"))"
+    "s3Uri:object or prefix or bucket:($(aws s3 ls "s3:/${s3_pwd}/"))"
