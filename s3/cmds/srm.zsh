@@ -10,10 +10,19 @@ function srm() {
     while getopts 'hdri': opt; do
         case ${opt} in
         h)
-            tip "Usage:"
+            tip "NAME"
+            tip "    $0"
+
+            echo
+            tip "SYNOPSIS"
             tip "    $0 [-h] [-r] [-d] [-i <wildcard>] <S3Uri>"
 
             echo
+            tip "DESCRIPTION"
+            tip "    Deletes an S3 object."
+
+            echo
+            tip "OPTIONS"
             tip "    -h Print this message, then exit"
 
             echo

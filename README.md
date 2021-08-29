@@ -114,9 +114,16 @@ The command name prefix character `s` stands for aws service s3.
 ### 1.1.7. <font color=red>srm</font>
 
 ```diff
-+ Usage:
++ NAME
++     srm
++ 
++ SYNOPSIS
 +     srm [-h] [-r] [-d] [-i <wildcard>] <S3Uri>
 + 
++ DESCRIPTION
++     Deletes an S3 object.
++ 
++ OPTIONS
 +     -h Print this message, then exit
 + 
 +     -r Command is performed on all files or objects under the specified directory or prefix.
