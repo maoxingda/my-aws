@@ -11,7 +11,9 @@
 
 # 1. aws:zzz:
 
-My aws s3 command line interface, just as an aid to myself.
+**My aws s3 command line interface, just as an aid to myself.**
+
+
 
 ## 1.1. commands
 
