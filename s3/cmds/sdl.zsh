@@ -84,7 +84,7 @@ function sdl() {
         return 3
     fi
 
-    if is_relpath "${LocalPath}"; then
+    if is_relpath "${LocalPath}" && [[ ${LocalPath} != '-' ]]; then
         LocalPath="${PWD}/${LocalPath}"
     fi
 
