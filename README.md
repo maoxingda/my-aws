@@ -23,7 +23,12 @@ The command name prefix character `s` stands for aws service s3.
 +
 + Example:
 +   scd -h
++     Usage:
++     scd [-h | [S3Uri]]
++
 +   sls -h
++     Usage:
++     sls [-h | [S3Uri]]
 ```
 
 

@@ -8,7 +8,8 @@ function sls() {
     while getopts 'hr' opt; do
         case ${opt} in
         h)
-            tip "Usage: $0 [-r] [S3Uri]"
+            tip "Usage:"
+            tip "    $0 [-h] [-r] [S3Uri]"
             return 0
             ;;
         r)
