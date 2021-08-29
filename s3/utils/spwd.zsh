@@ -1,3 +1,3 @@
 function spwd() {
-    tip "${s3_pwd}"
+    tip "s3:/${s3_pwd}"
 }
