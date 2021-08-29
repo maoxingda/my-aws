@@ -17,6 +17,17 @@ My aws s3 command line interface, just as an aid to myself.
 
 The command name prefix character `s` stands for aws service s3.
 
+```diff
++ Usage:
++ 		command -h
++
++	Example:
++ 		scd -h
++ 		sls -h
+```
+
+
+
 Usage:
 
 > command -h 
