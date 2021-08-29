@@ -17,7 +17,7 @@ function smv() {
 
             echo
             tip "SYNOPSIS"
-            tip "    $0 [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3SrcUri> [S3SrcUri]"
+            tip "    $0 [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3SrcUri> [S3DstUri]"
 
             echo
             tip "DESCRIPTION"
