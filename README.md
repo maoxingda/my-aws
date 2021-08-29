@@ -1,13 +1,13 @@
 - [1. aws:zzz:](#1-awszzz)
   - [1.1. commands](#11-commands)
-    - [1.1.1. <font color=red>spwd</font>](#111-font-colorredspwdfont)
-    - [1.1.2. <font color=red>sdb</font>](#112-font-colorredsdbfont)
-    - [1.1.3. <font color=red>scd</font>](#113-font-colorredscdfont)
-    - [1.1.4. <font color=red>sls</font>](#114-font-colorredslsfont)
-    - [1.1.5. <font color=red>sul</font>](#115-font-colorredsulfont)
-    - [1.1.6. <font color=red>sdl</font>](#116-font-colorredsdlfont)
-    - [1.1.7. <font color=red>srm</font>](#117-font-colorredsrmfont)
-    - [1.1.8. <font color=red>smv</font>](#118-font-colorredsmvfont)
+    - [1.1.1. spwd](#111-spwd)
+    - [1.1.2. sdb](#112-sdb)
+    - [1.1.3. scd](#113-scd)
+    - [1.1.4. sls](#114-sls)
+    - [1.1.5. sul](#115-sul)
+    - [1.1.6. sdl](#116-sdl)
+    - [1.1.7. srm](#117-srm)
+    - [1.1.8. smv](#118-smv)
 
 # 1. aws:zzz:
 
@@ -35,7 +35,7 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.1. <font color=red>spwd</font>
+### 1.1.1. spwd
 
 ```diff
 + print working directory
@@ -43,7 +43,7 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.2. <font color=red>sdb</font>
+### 1.1.2. sdb
 
 ```diff
 + set -vx & set +vx option for command
@@ -51,14 +51,14 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.3. <font color=red>scd</font>
+### 1.1.3. scd
 
 ```diff
 + Usage:
 +     scd [-h | [S3Uri]]
 ```
 
-### 1.1.4. <font color=red>sls</font>
+### 1.1.4. sls
 
 ```diff
 + Usage:
@@ -67,7 +67,7 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.5. <font color=red>sul</font>
+### 1.1.5. sul
 
 ```diff
 + NAME
@@ -90,7 +90,7 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.6. <font color=red>sdl</font>
+### 1.1.6. sdl
 
 ```diff
 + NAME
@@ -113,7 +113,7 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.7. <font color=red>srm</font>
+### 1.1.7. srm
 
 ```diff
 + NAME
@@ -136,7 +136,7 @@ The command name prefix character `s` stands for aws service s3.
 
 
 
-### 1.1.8. <font color=red>smv</font>
+### 1.1.8. smv
 
 ```diff
 + NAME
