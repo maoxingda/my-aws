@@ -33,7 +33,7 @@ function scd() {
 
     elif [[ ${S3Uri} == ".." ]]; then
         s3_old_pwd="${s3_pwd}"
-        s3_pwd="${s3_pwd%/*}"
+        s3_pwd="$(normpath "${s3_pwd}/..")"
         return 0
 
     elif is_relpath "${S3Uri}"; then
@@ -43,6 +43,8 @@ function scd() {
             S3Uri="${s3_pwd}/${S3Uri}"
         fi
     fi
+
+    S3Uri="$(normpath "${S3Uri}")"
 
     not_find_msg="$0: no such object, prefix, or bucket: ${S3Uri}"
 
@@ -55,7 +57,7 @@ function scd() {
         fi
     else
         if eval "aws s3 ls s3:/${S3Uri} --human-readable"; then
-            eval "aws s3 ls s3:/${S3Uri%/}/ --human-readable"
+            eval "aws s3 ls s3:/${S3Uri}/ --human-readable"
             s3_old_pwd=${s3_pwd}
             s3_pwd=${S3Uri}
         else

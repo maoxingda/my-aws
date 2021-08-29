@@ -8,7 +8,7 @@ function normpath() {
     local dn="$1" np ce
 
     # check if we have absolute path and if not make it absolute
-    [[ ${dn:0:1} != '/' ]] && dn="${PWD}/${dn}"
+    [[ ${dn:0:1} != '/' ]] && dn="${s3_pwd}/${dn}"
 
     # loop on processing all path elements
     while [[ ${dn} != '/' ]]; do
