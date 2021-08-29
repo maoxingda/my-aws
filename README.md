@@ -143,7 +143,7 @@ The command name prefix character `s` stands for aws service s3.
 +     smv
 + 
 + SYNOPSIS
-+     smv [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3SrcUri> [S3SrcUri]
++     smv [-h] [-r] [-d] [-q] [-n] [-i <wildcard>] <S3SrcUri> [S3DstUri]
 + 
 + DESCRIPTION
 +     Copies S3 object to another location in S3.
