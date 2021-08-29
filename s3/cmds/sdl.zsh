@@ -88,6 +88,8 @@ function sdl() {
         LocalPath="${PWD}/${LocalPath}"
     fi
 
+    S3Uri="$(normpath "${S3Uri}")"
+
     cmd="aws s3 cp s3:/${S3Uri} ${LocalPath}"
 
     ((quiet)) && cmd="${cmd} --quiet"

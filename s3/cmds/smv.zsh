@@ -92,6 +92,9 @@ function smv() {
         fi
     fi
 
+    S3SrcUri="$(normpath "${S3SrcUri}")"
+    S3DstUri="$(normpath "${S3DstUri}")"
+
     cmd="aws s3 mv s3:/${S3SrcUri} s3:/${S3DstUri}"
 
     ((quiet)) && cmd="${cmd} --quiet"

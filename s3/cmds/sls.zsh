@@ -40,7 +40,9 @@ function sls() {
         fi
     fi
 
-    cmd="aws s3 ls s3:/${S3Uri%/}/ --human-readable"
+    S3Uri="$(normpath "${S3Uri}")"
+
+    cmd="aws s3 ls s3:/${S3Uri} --human-readable"
 
     ((recursive)) && cmd="${cmd} --recursive"
 

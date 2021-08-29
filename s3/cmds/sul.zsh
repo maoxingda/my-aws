@@ -88,7 +88,9 @@ function sul() {
         return 3
     fi
 
-    ((recursive)) && S3Uri="${S3Uri%/}/"
+    S3Uri="$(normpath "${S3Uri}")"
+
+    ((recursive)) && S3Uri="${S3Uri}"
 
     cmd="aws s3 cp ${LocalPath} s3:/${S3Uri}"
 

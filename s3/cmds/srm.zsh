@@ -74,6 +74,8 @@ function srm() {
         fi
     fi
 
+    S3Uri="$(normpath "${S3Uri}")"
+
     cmd="aws s3 rm s3:/${S3Uri}"
 
     ((dryrun)) && cmd="${cmd} --dryrun"
