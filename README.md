@@ -49,7 +49,7 @@ Usage:
 
 ### 1.1.7. <font color=red>smv</font>
 
-> implementation for `aws s3 mv <S3Uri> <S3Uri>`
+> implementation for `aws s3 mv <S3Uri> [S3Uri]`
 
 ### 1.1.8. <font color=red>srm</font>
 
