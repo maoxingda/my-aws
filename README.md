@@ -19,11 +19,11 @@ The command name prefix character `s` stands for aws service s3.
 
 ```diff
 + Usage:
-+ 		command -h
++   command -h
 +
 +	Example:
-+ 		scd -h
-+ 		sls -h
++   scd -h
++   sls -h
 ```
 
 
