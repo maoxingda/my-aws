@@ -21,7 +21,7 @@ The command name prefix character `s` stands for aws service s3.
 + Usage:
 +   command -h
 +
-+	Example:
++ Example:
 +   scd -h
 +   sls -h
 ```
