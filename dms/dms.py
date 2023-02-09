@@ -21,7 +21,7 @@ PaginatorName = [
 import boto3
 
 
-def find_task_by_table(table_name):
+def find_task_by_table(*, table_name):
     """
     查找同步某个表的所有任务
     :param table_name: 表名称
@@ -40,4 +40,4 @@ def find_task_by_table(table_name):
 if __name__ == '__main__':
     dms_client = boto3.client('dms')
 
-    find_task_by_table('ali_provider_conf')
+    find_task_by_table(table_name='ali_provider_conf')
