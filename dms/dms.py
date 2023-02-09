@@ -1,21 +1,5 @@
 """
 日常常用小工具
-
-PaginatorName = [
-    "describe_certificates",
-    "describe_connections",
-    "describe_endpoint_types",
-    "describe_endpoints",
-    "describe_event_subscriptions",
-    "describe_events",
-    "describe_orderable_replication_instances",
-    "describe_replication_instances",
-    "describe_replication_subnet_groups",
-    "describe_replication_task_assessment_results",
-    "describe_replication_tasks",
-    "describe_schemas",
-    "describe_table_statistics",
-]
 """
 
 import boto3
