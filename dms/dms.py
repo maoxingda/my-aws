@@ -1,27 +1,45 @@
+"""
+日常常用小工具
+PaginatorName = [
+    "describe_certificates",
+    "describe_connections",
+    "describe_endpoint_types",
+    "describe_endpoints",
+    "describe_event_subscriptions",
+    "describe_events",
+    "describe_orderable_replication_instances",
+    "describe_replication_instances",
+    "describe_replication_subnet_groups",
+    "describe_replication_task_assessment_results",
+    "describe_replication_tasks",
+    "describe_schemas",
+    "describe_table_statistics",
+]
+"""
 import sys
 
 import boto3
 # from util.format import print
 
-if __name__ == '__main__':
-    dms_client = boto3.client('dms')
 
-    de_paginator = dms_client.get_paginator('describe_endpoints')
-    for endpoints in de_paginator.paginate():
-        for endpoint in endpoints['Endpoints']:
-            print(endpoint['EndpointIdentifier'])
-
+def find_task_by_table(table_name):
+    """
+    查找同步某个表的所有任务
+    :param table_name: 表名称
+    :return: None
+    """
     drt_paginator = dms_client.get_paginator('describe_replication_tasks')
     for tasks in drt_paginator.paginate():
         for task in tasks['ReplicationTasks']:
             dts_paginator = dms_client.get_paginator('describe_table_statistics')
             for stats in dts_paginator.paginate(ReplicationTaskArn=task['ReplicationTaskArn']):
                 for stat in stats['TableStatistics']:
-                    if stat['Deletes'] > 0:
-                        print(stat['SchemaName'], stat['TableName'], stat['Deletes'])
+                    if table_name in stat['TableName']:
+                        print(task['ReplicationTaskIdentifier'])
 
-    dri_paginator = dms_client.get_paginator('describe_replication_instances')
-    for instances in dri_paginator.paginate():
-        for instance in instances['ReplicationInstances']:
-            print(instance['ReplicationInstanceIdentifier'])
+
+if __name__ == '__main__':
+    dms_client = boto3.client('dms')
+
+    find_task_by_table('ali_provider_conf')
 
