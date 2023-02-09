@@ -1,5 +1,6 @@
 """
 日常常用小工具
+
 PaginatorName = [
     "describe_certificates",
     "describe_connections",
@@ -16,10 +17,8 @@ PaginatorName = [
     "describe_table_statistics",
 ]
 """
-import sys
 
 import boto3
-# from util.format import print
 
 
 def find_task_by_table(table_name):
@@ -42,4 +41,3 @@ if __name__ == '__main__':
     dms_client = boto3.client('dms')
 
     find_task_by_table('ali_provider_conf')
-
