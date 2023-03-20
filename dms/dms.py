@@ -18,7 +18,7 @@ def find_task_by_table(*, table_name):
             for stats in dts_paginator.paginate(ReplicationTaskArn=task['ReplicationTaskArn']):
                 for stat in stats['TableStatistics']:
                     if table_name in stat['TableName']:
-                        print(task['ReplicationTaskIdentifier'])
+                        print(task['ReplicationTaskIdentifier'].ljust(64), f"https://cn-northwest-1.console.amazonaws.cn/dms/v2/home?region=cn-northwest-1#taskDetails/{task['ReplicationTaskIdentifier']}")
 
 
 def find_endpoint_by_addr(*, server_address):

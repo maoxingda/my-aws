@@ -9,10 +9,10 @@ from util.format import print
 if __name__ == '__main__':
     redshift_client = boto3.client('redshift')
 
-    cluster_id = 'bi-prod-hc'
+    cluster_id = 'bi-sandbox'
 
-    for i in range(7):
-        start_time = datetime(2022, 12, i + 1, 4)
+    for i in range(1):
+        start_time = datetime(2022, 12, 9, 4)
         response = redshift_client.describe_cluster_snapshots(
             ClusterIdentifier=cluster_id,
             StartTime=start_time,
@@ -31,10 +31,10 @@ if __name__ == '__main__':
         response = redshift_client.restore_table_from_cluster_snapshot(
             ClusterIdentifier=cluster_id,
             SnapshotIdentifier=snapshot_id,
-            SourceDatabaseName='prod',
+            SourceDatabaseName='beta',
             SourceSchemaName='met',
             SourceTableName='user_transaction_meal_plan_agg',
-            TargetDatabaseName='prod',
+            TargetDatabaseName='beta',
             TargetSchemaName='met',
             NewTableName=f'user_transaction_meal_plan_agg_{datetime.strftime(start_time, "%Y%m%d")}',
         )
@@ -52,6 +52,7 @@ if __name__ == '__main__':
             print(status)
 
             if status in ['SUCCEEDED', 'FAILED', 'CANCELED']:
+                print(response)
                 break
 
             time.sleep(15)
