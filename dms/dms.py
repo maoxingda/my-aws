@@ -11,6 +11,7 @@ def find_task_by_table(*, table_name):
     :param table_name: 表名称
     :return: None
     """
+    find_tasks = set()
     drt_paginator = dms_client.get_paginator('describe_replication_tasks')
     for tasks in drt_paginator.paginate():
         for task in tasks['ReplicationTasks']:
@@ -18,7 +19,11 @@ def find_task_by_table(*, table_name):
             for stats in dts_paginator.paginate(ReplicationTaskArn=task['ReplicationTaskArn']):
                 for stat in stats['TableStatistics']:
                     if table_name in stat['TableName']:
-                        print(task['ReplicationTaskIdentifier'].ljust(64), f"https://cn-northwest-1.console.amazonaws.cn/dms/v2/home?region=cn-northwest-1#taskDetails/{task['ReplicationTaskIdentifier']}")
+                        find_tasks.add((task['ReplicationTaskIdentifier'], f"https://cn-northwest-1.console.amazonaws.cn/dms/v2/home?region=cn-northwest-1#taskDetails/{task['ReplicationTaskIdentifier']}"))
+    if find_tasks:
+        task_id_max_length = max([len(task_id) for task_id, _ in find_tasks])
+        for task_id, task_url in sorted(find_tasks):
+            print(task_id.ljust(task_id_max_length), task_url)
 
 
 def find_endpoint_by_addr(*, server_address):
