@@ -1,5 +1,7 @@
+import sys
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
+from pprint import pprint
 
 import boto3
 
@@ -13,8 +15,8 @@ def restore_table_from_cluster_snapshot(
     # 集群在连续两次恢复快照操作之间必须等待集群状态更新为：Available
     start = datetime.now()
 
-    response = redshift_client.describe_clusters(
-        ClusterIdentifier='bi-prod-hc',
+    response = client.describe_clusters(
+        ClusterIdentifier=cluster_identifier,
     )
 
     cluster_status = response['Clusters'][0]['ClusterAvailabilityStatus']
@@ -24,8 +26,8 @@ def restore_table_from_cluster_snapshot(
     while cluster_status != 'Available':
         time.sleep(15)
 
-        response = redshift_client.describe_clusters(
-            ClusterIdentifier='bi-prod-hc',
+        response = client.describe_clusters(
+            ClusterIdentifier=cluster_identifier,
         )
 
         cluster_status = response['Clusters'][0]['ClusterAvailabilityStatus']
@@ -33,7 +35,7 @@ def restore_table_from_cluster_snapshot(
         print(f'cluster status: {cluster_status}', f'elapsed: {int((datetime.now() - start).total_seconds())} 秒')
 
     # 从集群快照恢复表
-    response = redshift_client.restore_table_from_cluster_snapshot(
+    response = client.restore_table_from_cluster_snapshot(
         ClusterIdentifier=cluster_identifier,
         SnapshotIdentifier=snapshot_identifier,
         SourceDatabaseName=src_table_name.split('.')[0],
@@ -47,7 +49,7 @@ def restore_table_from_cluster_snapshot(
 
     start = datetime.now()
     while (datetime.now() - start).total_seconds() / 60 < 15:
-        response = redshift_client.describe_table_restore_status(
+        response = client.describe_table_restore_status(
             ClusterIdentifier=cluster_identifier,
             TableRestoreRequestId=req_id,
         )
@@ -64,7 +66,27 @@ def restore_table_from_cluster_snapshot(
 
 
 if __name__ == '__main__':
-    redshift_client = boto3.client('redshift')
+    client = boto3.client('redshift')
+
+    paginator = client.get_paginator('describe_cluster_snapshots')
+
+    for page in paginator.paginate(ClusterIdentifier='bi-prod-hc',
+                                   SnapshotType='automated',
+                                   SortingEntities=[
+                                       {
+                                           'Attribute': 'CREATE_TIME',
+                                           'SortOrder': 'DESC'
+                                       },
+                                   ],
+                                   PaginationConfig={
+                                       'MaxItems': 2
+                                   },
+                                   StartTime='2023-06-10T00:00:00Z',
+                                   EndTime='2023-06-10T00:50:00Z'):
+        for snapshot in page['Snapshots']:
+            pprint(snapshot['SnapshotIdentifier'])
+
+    sys.exit(1)
 
     tables = [
         # 'ods.db_id_mapping_contract_party_id_mapping',
@@ -90,7 +112,7 @@ if __name__ == '__main__':
         'ods.id_mapping_user_id_mapping',
     ]
 
-    snapshot_identifier = 'rs:bi-prod-hc-2023-06-05-20-28-50'
+    snapshot_identifier = 'rs:bi-prod-hc-2023-06-10-00-37-20'
     snapshot_created_timestamp = datetime.strptime(snapshot_identifier[14:], '%Y-%m-%d-%H-%M-%S') + timedelta(hours=8)
     suffix = snapshot_created_timestamp.strftime('%Y%m%dT%H%M')
 
