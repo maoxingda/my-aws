@@ -41,9 +41,8 @@ if __name__ == '__main__':
     local_datetime_from_snapshot_id = (datetime.strptime(snapshot_id[-16:], "%Y-%m-%d-%H-%M") + timedelta(hours=8)).strftime('%Y%m%dT%H%M%S')
     restore_db_id = f'{db_id}-snapshot-{local_datetime_from_snapshot_id}'
 
-    response = client.describe_db_instances(DBInstanceIdentifier=db_id)
-
     # 从数据库快照创建新的数据库实例
+    # response = client.describe_db_instances(DBInstanceIdentifier=db_id)
     # client.restore_db_instance_from_db_snapshot(
     #     DBInstanceIdentifier=restore_db_id,
     #     DBSnapshotIdentifier=snapshot_id,
