@@ -1,6 +1,9 @@
 """
 日常常用小工具
 """
+import re
+import sys
+from pprint import pprint
 
 import boto3
 
@@ -19,7 +22,8 @@ def find_task_by_table(*, table_name):
             for stats in dts_paginator.paginate(ReplicationTaskArn=task['ReplicationTaskArn']):
                 for stat in stats['TableStatistics']:
                     if table_name in stat['TableName']:
-                        find_tasks.add((task['ReplicationTaskIdentifier'], f"https://cn-northwest-1.console.amazonaws.cn/dms/v2/home?region=cn-northwest-1#taskDetails/{task['ReplicationTaskIdentifier']}"))
+                        find_tasks.add((task['ReplicationTaskIdentifier'],
+                                        f"https://cn-northwest-1.console.amazonaws.cn/dms/v2/home?region=cn-northwest-1#taskDetails/{task['ReplicationTaskIdentifier']}"))
     if find_tasks:
         task_id_max_length = max([len(task_id) for task_id, _ in find_tasks])
         for task_id, task_url in sorted(find_tasks):
@@ -36,7 +40,7 @@ def find_endpoint_by_addr(*, server_address):
     for endpoints in de_paginator.paginate():
         for endpoint in endpoints['Endpoints']:
             if 'ServerName' in endpoint and server_address in endpoint['ServerName']:
-                print(endpoint['EndpointArn'])
+                print(endpoint['DatabaseName'], endpoint['EndpointArn'])
 
 
 def find_tasks_by_source_endpoint(*, endpoint_arn):
@@ -49,10 +53,9 @@ def find_tasks_by_source_endpoint(*, endpoint_arn):
     for tasks in drt_paginator.paginate():
         for task in tasks['ReplicationTasks']:
             if endpoint_arn in task['SourceEndpointArn']:
-                print(task['ReplicationTaskIdentifier'])
+                print(task['ReplicationTaskIdentifier'],
+                      f"https://cn-northwest-1.console.amazonaws.cn/dms/v2/home?region=cn-northwest-1#taskDetails/{task['ReplicationTaskIdentifier']}")
 
 
 if __name__ == '__main__':
     dms_client = boto3.client('dms')
-
-    pass
