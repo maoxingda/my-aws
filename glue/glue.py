@@ -1,13 +1,17 @@
+import sys
+import textwrap
+from pprint import pprint as print
+
 import boto3
-import botocore
 
 if __name__ == '__main__':
     glue = boto3.client('glue')
-    try:
-        table = glue.get_table(DatabaseName='emr', Name='fan_corp_order_user')
-        print(table['Table']['Name'])
-    except botocore.exceptions.ClientError as error:
-        if error.response['Error']['Code'] == 'EntityNotFoundException':
-            print(error)
-        else:
-            raise error
+    paginator = glue.get_paginator('get_partitions')
+    sqls = []
+    for partitions in paginator.paginate(DatabaseName='emr', TableName='bill_bill'):
+        for partition in partitions['Partitions']:
+            loc = partition['StorageDescriptor']['Location'].replace('realtime-cdc/bill', 'realtime-cdc/payment')
+            sql = f"""alter table emr.bill_bill partition(event_time='{partition["Values"][0]}') set location '{loc}';"""
+            sqls.append(sql)
+    with open('emr.bill_bill.sql', 'w') as f:
+        f.write('\n'.join(sqls))
