@@ -92,8 +92,8 @@ if __name__ == '__main__':
     cluster_id, dbname = ('bi-sandbox', 'beta') if os.getlogin() == 'root' else ('bi-prod-hc', 'prod')
 
     # 查找集群快照
-    # find_snapshot('2023/06/10 08:00', '2023/06/10 09:00')
-    # sys.exit(0)
+    find_snapshot('2023/06/10 08:00', '2023/06/10 09:00')
+    sys.exit(0)
 
     # with open('snapshot.log') as f:
     #     snapshot_id = f.read()
